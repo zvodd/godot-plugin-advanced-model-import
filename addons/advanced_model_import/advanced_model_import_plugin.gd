@@ -6,12 +6,19 @@ extends EditorPlugin
 const PLUGIN_DIR_PATH: String = "res://addons/advanced_model_import/"
 const TITLE: String = "Advanced Model Import"
 const ICON: Texture2D = preload(PLUGIN_DIR_PATH + "plugin-icon.svg")
+
 #  ==================== MODELS REIMPORT OPTION KEYS ====================
 const KEY_MESH_EXTRACT: StringName = &"mesh_extract"
 const KEY_MESH_EXTRACT_NAME: StringName = &"mesh_extract_name"
 const KEY_MESH_EXTRACT_MIRROR: StringName = &"mesh_extract_mirror"
 const KEY_MESH_EXTRACT_SOURCE_PATH: StringName = &"mesh_extract_source_path"
 const KEY_MESH_EXTRACT_PATH: StringName = &"mesh_extract_path"
+
+# --- BRANCH KEYS ---
+const KEY_BRANCH_EXTRACT: StringName = &"branch_extract"
+const KEY_BRANCH_EXTRACT_PATH: StringName = &"branch_extract_path"
+const KEY_BRANCH_EXTRACT_ROOT_NODE: StringName = &"branch_extract_root_node"
+
 const KEY_MATERIAL_EXTRACT: StringName = &"material_extract"
 const KEY_MATERIAL_EXTRACT_PATH: StringName = &"material_extract_path"
 const KEY_MATERIAL_REPLACE: StringName = &"material_replace"
@@ -92,6 +99,7 @@ static func apply_reimport(file_paths: PackedStringArray, options: Dictionary) -
 
 	print("%s - Applying new import settings." % [TITLE])
 
+	# 1. Extract Materials
 	if options.get(KEY_MATERIAL_EXTRACT, false) as bool:
 		import_error = _extract_materials(file_paths, options)
 
@@ -102,6 +110,7 @@ static func apply_reimport(file_paths: PackedStringArray, options: Dictionary) -
 
 	var has_mat_user_list: bool = options.get(KEY_MATERIAL_REPLACE, false) as bool
 
+	# 2. Replace Materials
 	if has_mat_user_list || !_materials_to_set.is_empty():
 		import_error = _replace_materials(file_paths, options, has_mat_user_list)
 
@@ -110,6 +119,7 @@ static func apply_reimport(file_paths: PackedStringArray, options: Dictionary) -
 		else:
 			printerr("Failed to replace materials: %s" % [error_string(import_error).capitalize()])
 
+	# 3. Extract Meshes
 	if options.get(KEY_MESH_EXTRACT, false) as bool:
 		import_error = _extract_meshes(file_paths, options)
 
@@ -117,6 +127,10 @@ static func apply_reimport(file_paths: PackedStringArray, options: Dictionary) -
 			print(" === Meshes extracted === ")
 		else:
 			printerr("Failed to extract meshes: %s" % [error_string(import_error).capitalize()])
+
+	# 4. Extract Branches (New)
+	if options.get(KEY_BRANCH_EXTRACT, false) as bool:
+		_extract_branches(file_paths, options)
 
 	_materials_to_set.clear()
 
@@ -144,6 +158,8 @@ static func _get_mesh_instances_from_scene(file_path: String) -> Array[MeshInsta
 		if node is MeshInstance3D:
 			mesh_list.append(node as MeshInstance3D)
 
+	node_instance.queue_free() # Clean up
+
 	return mesh_list
 
 
@@ -157,6 +173,7 @@ static func _open_import_file(import_file_path: String) -> ConfigFile:
 	return import_file
 
 #endregion
+
 
 #region Extract Materials
 
@@ -203,21 +220,23 @@ static func _extract_materials_from_file(file_path: String, destination: String)
 			continue
 
 		for idx: int in range(mesh.get_surface_count()):
-			var material: Material = mesh.surface_get_material(idx).duplicate(true) as Material
+			var material: Material = mesh.surface_get_material(idx)
 
 			if !is_instance_valid(material):
-				material = null
 				continue
 
-			if !_materials_to_set.has(material.resource_name):
-				var material_path: String = "%s%s.tres" % [destination, material.resource_name]
+			var mat_dupe = material.duplicate(true) as Material
+
+			if !is_instance_valid(mat_dupe):
+				continue
+
+			if !_materials_to_set.has(mat_dupe.resource_name):
+				var material_path: String = "%s%s.tres" % [destination, mat_dupe.resource_name]
 
 				if !FileAccess.file_exists(material_path):
-					ResourceSaver.save(material, material_path)
+					ResourceSaver.save(mat_dupe, material_path)
 
-				_materials_to_set[material.resource_name] = material_path
-
-			material = null
+				_materials_to_set[mat_dupe.resource_name] = material_path
 
 	return Error.OK
 
@@ -433,5 +452,33 @@ static func _set_mesh_on_file(file_path: String, mesh_list: Dictionary[String, S
 		return Error.ERR_FILE_CANT_WRITE
 
 	return Error.OK
+
+#endregion
+
+#region Extract Branches
+
+static func _extract_branches(file_paths: PackedStringArray, options: Dictionary) -> void:
+	var branch_path: String = str(options.get(KEY_BRANCH_EXTRACT_PATH, ""))
+	var target_node: String = str(options.get(KEY_BRANCH_EXTRACT_ROOT_NODE, ""))
+
+	if branch_path.is_empty():
+		printerr("Branch Extract: No output path specified.")
+		return
+
+	if !branch_path.ends_with("/"):
+		branch_path += "/"
+
+	DirAccess.make_dir_recursive_absolute(branch_path)
+
+	print(" === Starting Branch Extraction === ")
+
+	for file: String in file_paths:
+		# Call the external module
+		var error: Error = BranchExtractor.extract_branches_from_file(file, branch_path, target_node)
+
+		if error != Error.OK:
+			printerr("Error extracting branches from %s" % file)
+
+	print(" === Branch Extraction Complete === ")
 
 #endregion

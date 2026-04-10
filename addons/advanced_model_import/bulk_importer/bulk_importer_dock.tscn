@@ -31,7 +31,7 @@ corner_detail = 6
 [sub_resource type="DPITexture" id="DPITexture_d0s0f"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"M3 2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9c1.105 0 1.818-.91 2-2l1-6a1 1 0 0 0-1-1H6c-.552 0-.909.455-1 1l-1 6c-.091.545-.448 1-1 1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1 1 1 0 0 0 1 1h5a1 1 0 0 0-1-1H7a2 2 0 0 0-2-2H3z\"/></svg>
 "
-saturation = 1.5
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
@@ -41,7 +41,17 @@ Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 [sub_resource type="DPITexture" id="DPITexture_a7k31"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"m8 1a1 1 0 0 0 -1 1v5h-2c-1.108 0-2 .892-2 2v1h10v-1c0-1.108-.892-2-2-2h-2v-5a1 1 0 0 0 -1-1zm-5 10v4l10-1v-3z\"/></svg>
 "
-saturation = 1.5
+saturation = 2.0
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
+}
+
+[sub_resource type="DPITexture" id="DPITexture_n3eas"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"M2 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-4a1 1 0 0 1-1-1V3a1 1 0 0 0-1-1z\"/></svg>
+"
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
@@ -72,37 +82,34 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 corner_detail = 6
 
-[sub_resource type="DPITexture" id="DPITexture_n3eas"]
+[sub_resource type="DPITexture" id="DPITexture_adykq"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"m7 1v6h-6v2h6v6h2v-6h6v-2h-6v-6z\"/></svg>
 "
-saturation = 1.5
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
 Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
 
-[sub_resource type="DPITexture" id="DPITexture_adykq"]
+[sub_resource type="DPITexture" id="DPITexture_b5xwq"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"M4 12a1 1 0 0 0 1.555.832l6-4a1 1 0 0 0 0-1.664l-6-4A1 1 0 0 0 4 4z\"/></svg>
 "
-saturation = 1.5
+saturation = 2.0
 color_map = {
 Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
 Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
 Color(1, 0.8666667, 0.39607844, 1): Color(0.83, 0.78, 0.62, 1)
 }
 
-[node name="BulkImporterDock" type="EditorDock" unique_id=515079167 node_paths=PackedStringArray("_apply_button", "_selected_paths_label", "_mesh_check", "_mesh_panel", "_mesh_name_option", "_mesh_mirror_check", "_mesh_path_edit", "_mesh_path_set_button", "_mesh_path_clear_button", "_mat_extract_check", "_mat_extract_panel", "_mat_extract_path_edit", "_mat_extract_path_set_button", "_mat_extract_path_clear_button", "_mat_replace_check", "_mat_replace_panel", "_mat_replace_no_material", "_mat_replace_material_container", "_mat_replace_name_edit", "_mat_replace_add_button", "_mat_replace_clear_button")]
+[node name="BulkImporterDock" type="EditorDock" unique_id=515079167 node_paths=PackedStringArray("_apply_button", "_selected_paths_label", "_mesh_check", "_mesh_panel", "_mesh_name_option", "_mesh_mirror_check", "_mesh_path_edit", "_mesh_path_set_button", "_mesh_path_clear_button", "_branch_check", "_branch_panel", "_branch_root_name_edit", "_branch_root_select_button", "_branch_path_edit", "_branch_path_set_button", "_branch_path_clear_button", "_branch_node_selection_dialog", "_branch_node_tree", "_mat_extract_check", "_mat_extract_panel", "_mat_extract_path_edit", "_mat_extract_path_set_button", "_mat_extract_path_clear_button", "_mat_replace_check", "_mat_replace_panel", "_mat_replace_no_material", "_mat_replace_material_container", "_mat_replace_name_edit", "_mat_replace_add_button", "_mat_replace_clear_button")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_lfbos")
-theme_override_constants/margin_left = 2
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
 title = "Advanced Model Import"
 layout_key = "advanced_model_import_dock"
 icon_name = &"DirAccess"
@@ -118,8 +125,17 @@ _mesh_mirror_check = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/Mar
 _mesh_path_edit = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MeshPanel/VBox/HBox/MeshPathEdit")
 _mesh_path_set_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MeshPanel/VBox/HBox/SetMeshButton")
 _mesh_path_clear_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MeshPanel/VBox/HBox/ClearMeshButton")
+_branch_check = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchHeader/Panel/BranchCheck")
+_branch_panel = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel")
+_branch_root_name_edit = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/BranchRootHBox/BranchRootLineEdit")
+_branch_root_select_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/BranchRootHBox/SelectBranchRootButton")
+_branch_path_edit = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/HBox/BranchPathEdit")
+_branch_path_set_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/HBox/SetBranchButton")
+_branch_path_clear_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/HBox/ClearBranchButton")
+_branch_node_selection_dialog = NodePath("BranchNodeSelectionDialog")
+_branch_node_tree = NodePath("BranchNodeSelectionDialog/BranchNodeTree")
 _mat_extract_check = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialExtractHeader/Panel/MaterialExtractCheck")
-_mat_extract_panel = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialExtractPanel")
+_mat_extract_panel = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialReplacePanel")
 _mat_extract_path_edit = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialExtractPanel/VBox/HBox/MaterialExtractPathEdit")
 _mat_extract_path_set_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialExtractPanel/VBox/HBox/SetMaterialExtractButton")
 _mat_extract_path_clear_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialExtractPanel/VBox/HBox/ClearMaterialExtractButton")
@@ -130,7 +146,6 @@ _mat_replace_material_container = NodePath("PanelContainer/MainContainer/MarginO
 _mat_replace_name_edit = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialReplacePanel/VBox/HBox/AddMaterialNameEdit")
 _mat_replace_add_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialReplacePanel/VBox/HBox/AddMaterialReplaceButton")
 _mat_replace_clear_button = NodePath("PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialReplacePanel/VBox/HBox/ClearMaterialReplaceButton")
-metadata/_custom_type_script = "uid://cgc0mouar55cb"
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=605163877]
 layout_mode = 2
@@ -271,6 +286,98 @@ icon_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox" unique_id=1856223624]
 layout_mode = 2
 
+[node name="BranchHeader" type="HBoxContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox" unique_id=738811449]
+layout_mode = 2
+
+[node name="Branch" type="Label" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchHeader" unique_id=1984981686]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderMedium"
+text = "Branch Scenes"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="Panel" type="PanelContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchHeader" unique_id=1113018135]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_lfbos")
+
+[node name="BranchCheck" type="CheckBox" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchHeader/Panel" unique_id=1556223393]
+layout_mode = 2
+text = "Enabled"
+
+[node name="BranchPanel" type="PanelContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox" unique_id=1468583880]
+visible = false
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel" unique_id=793147559]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox" unique_id=199718462]
+layout_mode = 2
+columns = 2
+
+[node name="BranchRootNameLabel" type="Label" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/Grid" unique_id=794297201]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Branch Root Name"
+vertical_alignment = 1
+
+[node name="BranchRootHBox" type="HBoxContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox" unique_id=1426507596]
+layout_mode = 2
+
+[node name="BranchRootLineEdit" type="LineEdit" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/BranchRootHBox" unique_id=1150007016]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "e.g. RootNode (Empty for scene root)"
+
+[node name="SelectBranchRootButton" type="Button" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/BranchRootHBox" unique_id=222346756]
+layout_mode = 2
+text = "Select..."
+icon = SubResource("DPITexture_n3eas")
+
+[node name="BranchPathLabel" type="Label" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox" unique_id=374599522]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Branch Extract Path"
+vertical_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox" unique_id=300918521]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BranchPathEdit" type="LineEdit" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/HBox" unique_id=213765023]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "res://"
+editable = false
+context_menu_enabled = false
+emoji_menu_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+
+[node name="SetBranchButton" type="Button" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/HBox" unique_id=314882678]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Set meshes extract path"
+icon = SubResource("DPITexture_d0s0f")
+icon_alignment = 1
+
+[node name="ClearBranchButton" type="Button" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/BranchPanel/VBox/HBox" unique_id=707614427]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Clear meshes extract path"
+icon = SubResource("DPITexture_a7k31")
+icon_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox" unique_id=1033497836]
+layout_mode = 2
+
 [node name="MaterialHeader" type="HBoxContainer" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox" unique_id=1357725731]
 layout_mode = 2
 
@@ -404,7 +511,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 tooltip_text = "Add an external material entry"
 text = "Add"
-icon = SubResource("DPITexture_n3eas")
+icon = SubResource("DPITexture_adykq")
 
 [node name="ClearMaterialReplaceButton" type="Button" parent="PanelContainer/MainContainer/MarginOut/Scroll/MarginIn/VBox/MaterialReplacePanel/VBox/HBox" unique_id=469272495]
 layout_mode = 2
@@ -446,4 +553,21 @@ tooltip_text = "No file or directory selected
 Select at least one option"
 disabled = true
 text = "Reimport"
-icon = SubResource("DPITexture_adykq")
+icon = SubResource("DPITexture_b5xwq")
+
+[node name="BranchNodeSelectionDialog" type="AcceptDialog" parent="." unique_id=123456789]
+oversampling_override = 1.0
+title = "Select Branch Root Node"
+initial_position = 2
+size = Vector2i(400, 600)
+
+[node name="BranchNodeTree" type="Tree" parent="BranchNodeSelectionDialog" unique_id=987654321]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 392.0
+offset_bottom = 551.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_lfbos")
+hide_root = true
+metadata/_custom_type_script = "uid://cgc0mouar55cb"

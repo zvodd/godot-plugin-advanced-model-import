@@ -31,6 +31,8 @@ static var _file_display_sep: String = ""
 
 @export var _apply_button: Button = null
 @export var _selected_paths_label: RichTextLabel = null
+
+# --- MESHES ---
 @export_group("Meshes", "_mesh_")
 @export var _mesh_check: CheckBox = null
 @export var _mesh_panel: PanelContainer = null
@@ -40,6 +42,21 @@ static var _file_display_sep: String = ""
 @export var _mesh_path_edit: LineEdit = null
 @export var _mesh_path_set_button: Button = null
 @export var _mesh_path_clear_button: Button = null
+
+# --- BRANCHES ---
+@export_group("Branches", "_branch_")
+@export var _branch_check: CheckBox = null
+@export var _branch_panel: PanelContainer = null
+@export var _branch_root_name_edit: LineEdit = null
+@export var _branch_root_select_button: Button = null
+@export_subgroup("Path", "_branch_path_")
+@export var _branch_path_edit: LineEdit = null
+@export var _branch_path_set_button: Button = null
+@export var _branch_path_clear_button: Button = null
+@export var _branch_node_selection_dialog: AcceptDialog = null
+@export var _branch_node_tree: Tree = null
+
+# --- MATERIALS ---
 @export_group("Materials", "_mat_")
 @export_subgroup("Extract", "_mat_extract_")
 @export var _mat_extract_check: CheckBox = null
@@ -59,13 +76,20 @@ static var _file_display_sep: String = ""
 
 var _selected_editor_paths: PackedStringArray = PackedStringArray()
 var _selected_files: PackedStringArray = PackedStringArray()
+
 var _mesh_extract_path: String = ""
+var _branch_extract_path: String = "" # New
 var _material_extract_path: String = ""
+
 var _material_replace_dict: Dictionary[String, Material] = { }
 var _material_entry_list: Array[MaterialReplacementEntry] = []
 var _parent_container: TabContainer = null
 var _material_entry_scene: PackedScene = null
+
 var _mesh_extract_path_dialog: EditorFileDialog = null
+var _branch_extract_path_dialog: EditorFileDialog = null # New
+#var _branch_node_selection_dialog: AcceptDialog = null
+#var _branch_node_tree: Tree = null
 var _material_extract_path_dialog: EditorFileDialog = null
 var _material_replace_file_dialog: EditorFileDialog = null
 var _confirm_reimport_dialog: ConfirmationDialog = null
@@ -101,6 +125,11 @@ func _init() -> void:
 	_setup_editor_file_dialog(_mesh_extract_path_dialog)
 	_mesh_extract_path_dialog.file_mode = FileDialog.FileMode.FILE_MODE_OPEN_DIR
 
+	# New Branch Dialog
+	_branch_extract_path_dialog = EditorFileDialog.new()
+	_setup_editor_file_dialog(_branch_extract_path_dialog)
+	_branch_extract_path_dialog.file_mode = FileDialog.FileMode.FILE_MODE_OPEN_DIR
+
 	_material_extract_path_dialog = EditorFileDialog.new()
 	_setup_editor_file_dialog(_material_extract_path_dialog)
 	_material_extract_path_dialog.file_mode = FileDialog.FileMode.FILE_MODE_OPEN_DIR
@@ -117,8 +146,14 @@ func _init() -> void:
 
 func _ready() -> void:
 	_apply_button.icon = play_icon
+
 	_mesh_path_clear_button.icon = clear_icon
 	_mesh_path_set_button.icon = load_icon
+
+	_branch_path_clear_button.icon = clear_icon
+	_branch_path_set_button.icon = load_icon
+	_branch_root_select_button.icon = folder_icon
+
 	_mat_extract_path_clear_button.icon = clear_icon
 	_mat_extract_path_set_button.icon = load_icon
 	_mat_replace_add_button.icon = add_icon
@@ -130,6 +165,7 @@ func _ready() -> void:
 		_mat_replace_no_material.show()
 
 	_on_mesh_toggled(_mesh_check.button_pressed)
+	_on_branch_toggled(_branch_check.button_pressed) # New
 	_on_mat_extract_toggled(_mat_extract_check.button_pressed)
 	_on_mat_replace_toggled(_mat_replace_check.button_pressed)
 	_check_can_apply()
@@ -145,20 +181,35 @@ func _enter_tree() -> void:
 		)
 
 	_apply_button.pressed.connect(_on_apply_pressed)
+
+	# Mesh Connections
 	_mesh_check.toggled.connect(_on_mesh_toggled)
 	_mesh_path_set_button.pressed.connect(_mesh_extract_path_dialog.popup_centered)
 	_mesh_path_clear_button.pressed.connect(_on_mesh_path_clear_pressed)
+	_mesh_extract_path_dialog.dir_selected.connect(_on_mesh_extract_dir_selected)
+
+	# Branch Connections
+	_branch_check.toggled.connect(_on_branch_toggled)
+	_branch_path_set_button.pressed.connect(_branch_extract_path_dialog.popup_centered)
+	_branch_path_clear_button.pressed.connect(_on_branch_path_clear_pressed)
+	_branch_extract_path_dialog.dir_selected.connect(_on_branch_extract_dir_selected)
+	_branch_root_select_button.pressed.connect(_on_branch_root_select_pressed)
+	_branch_node_selection_dialog.confirmed.connect(_on_branch_node_selected)
+	_branch_root_name_edit.text_changed.connect(func(_new_text): _check_can_apply())
+
+	# Material Connections
 	_mat_extract_check.toggled.connect(_on_mat_extract_toggled)
 	_mat_extract_path_set_button.pressed.connect(_material_extract_path_dialog.popup_centered)
 	_mat_extract_path_clear_button.pressed.connect(_on_mat_extract_path_clear_pressed)
 	_mat_replace_check.toggled.connect(_on_mat_replace_toggled)
 	_mat_replace_add_button.pressed.connect(_on_mat_replace_add_pressed)
 	_mat_replace_clear_button.pressed.connect(_on_mat_replace_clear_pressed)
-	_mesh_extract_path_dialog.dir_selected.connect(_on_mesh_extract_dir_selected)
 	_material_extract_path_dialog.dir_selected.connect(_on_material_extract_dir_selected)
+
 	_confirm_reimport_dialog.confirmed.connect(_on_confirm_reimport_confirmed)
 
 	EditorInterface.get_base_control().add_child(_mesh_extract_path_dialog)
+	EditorInterface.get_base_control().add_child(_branch_extract_path_dialog) # New
 	EditorInterface.get_base_control().add_child(_material_extract_path_dialog)
 	EditorInterface.get_base_control().add_child(_material_replace_file_dialog)
 	EditorInterface.get_base_control().add_child(_confirm_reimport_dialog)
@@ -171,6 +222,7 @@ func _enter_tree() -> void:
 
 func _exit_tree() -> void:
 	EditorInterface.get_base_control().remove_child(_mesh_extract_path_dialog)
+	EditorInterface.get_base_control().remove_child(_branch_extract_path_dialog) # New
 	EditorInterface.get_base_control().remove_child(_material_extract_path_dialog)
 	EditorInterface.get_base_control().remove_child(_material_replace_file_dialog)
 	EditorInterface.get_base_control().remove_child(_confirm_reimport_dialog)
@@ -178,17 +230,30 @@ func _exit_tree() -> void:
 	_parent_container = null
 
 	_apply_button.pressed.disconnect(_on_apply_pressed)
+
+	# Mesh Disconnect
 	_mesh_check.toggled.disconnect(_on_mesh_toggled)
 	_mesh_path_set_button.pressed.disconnect(_mesh_extract_path_dialog.popup_centered)
 	_mesh_path_clear_button.pressed.disconnect(_on_mesh_path_clear_pressed)
+	_mesh_extract_path_dialog.dir_selected.disconnect(_on_mesh_extract_dir_selected)
+
+	# Branch Disconnect (New)
+	_branch_check.toggled.disconnect(_on_branch_toggled)
+	_branch_path_set_button.pressed.disconnect(_branch_extract_path_dialog.popup_centered)
+	_branch_path_clear_button.pressed.disconnect(_on_branch_path_clear_pressed)
+	_branch_extract_path_dialog.dir_selected.disconnect(_on_branch_extract_dir_selected)
+	_branch_root_select_button.pressed.disconnect(_on_branch_root_select_pressed)
+	_branch_node_selection_dialog.confirmed.disconnect(_on_branch_node_selected)
+
+	# Material Disconnect
 	_mat_extract_check.toggled.disconnect(_on_mat_extract_toggled)
 	_mat_extract_path_set_button.pressed.disconnect(_material_extract_path_dialog.popup_centered)
 	_mat_extract_path_clear_button.pressed.disconnect(_on_mat_extract_path_clear_pressed)
 	_mat_replace_check.toggled.disconnect(_on_mat_replace_toggled)
 	_mat_replace_add_button.pressed.disconnect(_on_mat_replace_add_pressed)
 	_mat_replace_clear_button.pressed.disconnect(_on_mat_replace_clear_pressed)
-	_mesh_extract_path_dialog.dir_selected.disconnect(_on_mesh_extract_dir_selected)
 	_material_extract_path_dialog.dir_selected.disconnect(_on_material_extract_dir_selected)
+
 	_confirm_reimport_dialog.confirmed.disconnect(_on_confirm_reimport_confirmed)
 
 
@@ -258,6 +323,10 @@ func _check_can_apply() -> void:
 		is_disabled = true
 		tooltips.append("No path set to extract meshes")
 
+	if _branch_check.button_pressed && _branch_extract_path.is_empty():
+		is_disabled = true
+		tooltips.append("No path set to extract branches")
+
 	if _mat_extract_check.button_pressed && _material_extract_path.is_empty():
 		is_disabled = true
 		tooltips.append("No path set to extract materials")
@@ -271,7 +340,7 @@ func _check_can_apply() -> void:
 			tooltips.append("At least 1 replacement material is not set")
 
 	if !_mesh_check.button_pressed && !_mat_extract_check.button_pressed \
-	&& !_mat_replace_check.button_pressed:
+	&& !_mat_replace_check.button_pressed && !_branch_check.button_pressed:
 		is_disabled = true
 		tooltips.append("Select at least one option")
 
@@ -358,6 +427,67 @@ func _on_mesh_toggled(toggled_on: bool) -> void:
 
 func _on_mesh_path_clear_pressed() -> void:
 	_on_mesh_extract_dir_selected("")
+
+# --- BRANCH CALLBACKS ---
+func _on_branch_toggled(toggled_on: bool) -> void:
+	_branch_panel.visible = toggled_on
+	_check_can_apply()
+
+
+func _on_branch_path_clear_pressed() -> void:
+	_on_branch_extract_dir_selected("")
+
+
+func _on_branch_extract_dir_selected(dir: String) -> void:
+	_branch_extract_path = dir
+	_branch_path_edit.text = dir
+	_check_can_apply()
+
+
+func _on_branch_root_select_pressed() -> void:
+	if _selected_files.is_empty():
+		printerr("No files selected to inspect tree.")
+		return
+
+	_branch_node_tree.clear()
+	var first_file: String = _selected_files[0]
+	var packed_scene: PackedScene = ResourceLoader.load(first_file)
+
+	if !is_instance_valid(packed_scene):
+		printerr("Could not load scene: ", first_file)
+		return
+
+	var root_node: Node = packed_scene.instantiate()
+	if !is_instance_valid(root_node):
+		return
+
+	var tree_root: TreeItem = _branch_node_tree.create_item()
+	_populate_node_tree(root_node, tree_root)
+
+	root_node.free()
+	_branch_node_selection_dialog.popup_centered()
+
+
+func _populate_node_tree(node: Node, parent_item: TreeItem) -> void:
+	parent_item.set_text(0, node.name)
+	parent_item.set_metadata(0, node.name) # We store the name to use in LineEdit
+
+	var editor_theme: Theme = EditorInterface.get_editor_theme()
+	var icon_name: StringName = node.get_class()
+	if editor_theme.has_icon(icon_name, &"EditorIcons"):
+		parent_item.set_icon(0, editor_theme.get_icon(icon_name, &"EditorIcons"))
+
+	for child in node.get_children():
+		var child_item: TreeItem = _branch_node_tree.create_item(parent_item)
+		_populate_node_tree(child, child_item)
+
+
+func _on_branch_node_selected() -> void:
+	var selected: TreeItem = _branch_node_tree.get_selected()
+	if is_instance_valid(selected):
+		_branch_root_name_edit.text = selected.get_metadata(0)
+		_check_can_apply()
+# ------------------------
 
 
 func _on_mat_extract_toggled(toggled_on: bool) -> void:
@@ -519,6 +649,11 @@ func _on_confirm_reimport_confirmed() -> void:
 		AdvancedModelImportPlugin.KEY_MESH_EXTRACT_MIRROR: _mesh_mirror_check.button_pressed,
 		AdvancedModelImportPlugin.KEY_MESH_EXTRACT_SOURCE_PATH: source_path,
 		AdvancedModelImportPlugin.KEY_MESH_EXTRACT_PATH: _mesh_extract_path,
+
+		AdvancedModelImportPlugin.KEY_BRANCH_EXTRACT: _branch_check.button_pressed,
+		AdvancedModelImportPlugin.KEY_BRANCH_EXTRACT_PATH: _branch_extract_path,
+		AdvancedModelImportPlugin.KEY_BRANCH_EXTRACT_ROOT_NODE: _branch_root_name_edit.text,
+
 		AdvancedModelImportPlugin.KEY_MATERIAL_EXTRACT: _mat_extract_check.button_pressed,
 		AdvancedModelImportPlugin.KEY_MATERIAL_EXTRACT_PATH: _material_extract_path,
 		AdvancedModelImportPlugin.KEY_MATERIAL_REPLACE: _mat_replace_check.button_pressed,

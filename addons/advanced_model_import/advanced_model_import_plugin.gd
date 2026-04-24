@@ -302,6 +302,7 @@ static func _replace_materials_from_file(file_path: String) -> Error:
 		subresources["materials"] = { }
 
 	for material_name: String in _materials_to_set.keys() as Array[String]:
+		print("replacesing material named  %s with material at path %s" %[material_name, _materials_to_set[material_name]])
 		subresources["materials"][material_name] = {
 			"use_external/enabled": true,
 			"use_external/path": _materials_to_set[material_name],

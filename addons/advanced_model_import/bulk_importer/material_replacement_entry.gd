@@ -49,15 +49,16 @@ func _exit_tree() -> void:
 	_set_path_button.pressed.disconnect(_on_set_path_pressed)
 	_remove_button.pressed.disconnect(_on_remove_pressed)
 
-	if is_instance_valid(_material_file_dialog) \
-	&& _material_file_dialog.file_selected.is_connected(_on_material_replace_file_selected):
-		_material_file_dialog.file_selected.disconnect(_on_material_replace_file_selected)
+	if is_instance_valid(_material_file_dialog):
+		var callback := _on_material_replace_file_selected.bind(self)
+		if _material_file_dialog.file_selected.is_connected(callback):
+			_material_file_dialog.file_selected.disconnect(callback)
+
 
 #region Utilities
 
 func setup(material_file_dialog: EditorFileDialog) -> void:
-	if !is_instance_valid(_material_file_dialog):
-		_material_file_dialog = material_file_dialog
+	_material_file_dialog = material_file_dialog
 
 #endregion
 
@@ -67,10 +68,9 @@ func _on_set_path_pressed() -> void:
 	if !is_instance_valid(_material_file_dialog):
 		return
 
-	_material_file_dialog.file_selected.connect(_on_material_replace_file_selected)
-	_material_file_dialog.confirmed.connect(_on_material_replace_file_closed)
-	_material_file_dialog.canceled.connect(_on_material_replace_file_closed)
-	_material_file_dialog.close_requested.connect(_on_material_replace_file_closed)
+	var callback := _on_material_replace_file_selected.bind(self)
+	if !_material_file_dialog.file_selected.is_connected(callback):
+		_material_file_dialog.file_selected.connect(callback, CONNECT_ONE_SHOT)
 
 	_material_file_dialog.current_path = material_path
 	_material_file_dialog.popup_centered()
@@ -80,15 +80,10 @@ func _on_remove_pressed() -> void:
 	remove_requested.emit(self)
 
 
-func _on_material_replace_file_closed() -> void:
-	if _material_file_dialog.file_selected.is_connected(_on_material_replace_file_selected):
-		_material_file_dialog.file_selected.disconnect(_on_material_replace_file_selected)
-		_material_file_dialog.confirmed.disconnect(_on_material_replace_file_closed)
-		_material_file_dialog.canceled.disconnect(_on_material_replace_file_closed)
-		_material_file_dialog.close_requested.disconnect(_on_material_replace_file_closed)
+func _on_material_replace_file_selected(path: String, entry: MaterialReplacementEntry) -> void:
+	if entry != self:
+		return
 
-
-func _on_material_replace_file_selected(path: String) -> void:
 	material_path = path
 	path_changed.emit(self)
 

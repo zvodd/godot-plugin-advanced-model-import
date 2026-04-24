@@ -31,10 +31,10 @@
 ## How To Use
 
 <p align="center">
-  <a href="https://github.com/Syvies/godot-plugin-advanced-model-import">
-    <img src="https://raw.githubusercontent.com/Syvies/godot-plugin-advanced-model-import/main/images/dock.png" alt="Screen capture of the plugin's dock" width="256"/>
-  </a>
+![Screen capture of the plugin's dock](/images/dock.png)
 </p>
+
+
 
 ### Extract Meshes
 
@@ -48,6 +48,16 @@ When selecting the option to extract meshes from models, you'll have access to a
 
 > [!WARNING]
 > The path to the destination folder is mandatory when this option is selected.
+> 
+
+### Extract Branch
+
+This lets you import individual node branches as scenes.
+
+![Screen capture of Extract Branch UI](/images/branch_extration.png)
+
+With a node path selected, all of the first order children of that node will be exported as the root of there own scene file.
+This is mostly useful if you have a 3D file with multiple models in it. e.g. An asset zoo style prop pack.
 
 ### Extract Materials
 
